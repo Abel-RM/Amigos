@@ -5,3 +5,5 @@
 ignorar esta linea
 
 0 amigo {Fernanda,Hernandez,FEMENINO,12-01-1998}
+
+{abel,robles,MASCULINO,10-07-1997} eliminar {Scarlet,Maryland,FEMENINO,25-10-2001}

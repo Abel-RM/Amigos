@@ -54,31 +54,26 @@ public class Amigos {
                         String persona1 = linea.split(" amigo ")[0];
                         String persona2 = linea.split(" amigo ")[1];
 
-                        Persona p1 = null,p2=null;
-                        if (persona1.matches(patternPersona)){
-                            p1 = crearPersona(persona1);
-                            insertarPersonaCatalogo(p1);
-                        }else
-                            if(Integer.parseInt(persona1) >= 0 && catalogo.size() > Integer.parseInt(persona1) ){
-                                p1 = catalogo.get(Integer.parseInt(persona1));
-                            }
+                        Persona p1 = obtenerPersona(persona1);
+                        Persona p2 = obtenerPersona(persona2);
 
-                        if (persona2.matches(patternPersona)){
-                            p2 = crearPersona(persona2);
-                            insertarPersonaCatalogo(p2);
-                        }
-                        else
-                            if(Integer.parseInt(persona2) >= 0 && catalogo.size() > Integer.parseInt(persona2) ){
-                                p2 = catalogo.get(Integer.parseInt(persona2));
-                            }
-
-                        if (p1 != null && p2 != null)
+                        if (p1 != null && p2 != null && p1 != p2)
                             insertarPersonaRed(p1,p2);
 
                     }
                     else
                         if (linea.matches(formatoEliminar)) {
                             //System.out.println("formato eliminar");
+                            String persona1 = linea.split(" eliminar ")[0];
+                            String persona2 = linea.split(" eliminar ")[1];
+
+                            Persona p1 = obtenerPersona(persona1);
+                            Persona p2 = obtenerPersona(persona2);
+                            if (red.get(p1).contains(p2))
+                                red.get(p1).remove(red.get(p1).indexOf(p2));
+
+                            if (red.get(p2).contains(p1))
+                                red.get(p2).remove(red.get(p2).indexOf(p1));
 
                         }
                         else
@@ -142,11 +137,29 @@ public class Amigos {
                 Integer.parseInt(fecha.substring(6,10)),
                 Integer.parseInt(fecha.substring(3,5)),
                 Integer.parseInt(fecha.substring(0,2)));
-
+        Persona p;
         if (sexo.equals("MASCULINO"))
-            return new Persona(nombre,apellido,fechaNac,Genero.MASCULINO);
+            p = new Persona(nombre,apellido,fechaNac,Genero.MASCULINO);
         else
-            return new Persona(nombre,apellido,fechaNac,Genero.FEMENINO);
+            p = new Persona(nombre,apellido,fechaNac,Genero.FEMENINO);
+
+        if (catalogo.contains(p))
+            return catalogo.get(catalogo.indexOf(p));
+        else
+            return p;
+    }
+
+    public static Persona obtenerPersona(String persona){
+        Persona p = null;
+        if (persona.matches(patternPersona)){
+            p = crearPersona(persona);
+            insertarPersonaCatalogo(p);
+        }else
+        if(Integer.parseInt(persona) >= 0 && catalogo.size() > Integer.parseInt(persona) ){
+            p = catalogo.get(Integer.parseInt(persona));
+        }
+
+        return p;
     }
 
     static String incluirFecha(String linea){
