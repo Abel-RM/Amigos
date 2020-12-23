@@ -23,7 +23,11 @@ public class Amigos {
 
     public static void main(String[] args) {
         leerArchivo();
+        System.out.println("-----------------------");
         System.out.println(catalogo);
+        System.out.println("-----------------------");
+        System.out.println(red);
+        System.out.println("-----------------------");
 
     }
     public static void leerArchivo() {
