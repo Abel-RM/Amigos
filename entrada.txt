@@ -1,0 +1,3 @@
+{abel,robles,MASCULINO,10-07-1997}
+
+{abel,robles,MASCULINO,10-07-1997} amigo {Scarlet,Maryland,FEMENINO,25-10-2001}
