@@ -1,9 +1,16 @@
-{abel,robles,MASCULINO,10-07-1997}
-
-{abel,robles,MASCULINO,10-07-1997} amigo {Scarlet,Maryland,FEMENINO,25-10-2001}
-
-ignorar esta linea
+{Jesus,Medina,MASCULINO,10-07-1997} amigo 20
 
 0 amigo {Fernanda,Hernandez,FEMENINO,12-01-1998}
 
-{abel,robles,MASCULINO,10-07-1997} eliminar {Scarlet,Maryland,FEMENINO,25-10-2001}
+0 amigo {Maria,Hernandez,FEMENINO,12-01-1998}
+
+
+
+{Fernanda,Hernandez,FEMENINO,12-01-1998} amigo {Scarlet,Hernandez,FEMENINO,12-01-1998}
+
+{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {Maryland,Hernandez,FEMENINO,12-01-1998}
+
+{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {LaOtra,Hernandez,FEMENINO,12-01-1998}
+
+{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {Prueba,Hernandez,FEMENINO,12-01-1998}
+amigos 0,1

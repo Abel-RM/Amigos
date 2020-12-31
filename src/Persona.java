@@ -37,5 +37,7 @@ public class Persona {
         return Objects.hash(nombre, apellido, sexo, fechaNacimiento);
     }
 
-
+    public String getNombre() {
+        return nombre;
+    }
 }
