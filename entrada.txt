@@ -1,16 +1,21 @@
-{Jesus,Medina,MASCULINO,10-07-1997} amigo 20
+{Jesus,Medina,MASCULINO,10-07-1997}
 
 0 amigo {Fernanda,Hernandez,FEMENINO,12-01-1998}
 
 0 amigo {Maria,Hernandez,FEMENINO,12-01-1998}
 
-
-
 {Fernanda,Hernandez,FEMENINO,12-01-1998} amigo {Scarlet,Hernandez,FEMENINO,12-01-1998}
 
 {Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {Maryland,Hernandez,FEMENINO,12-01-1998}
 
-{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {LaOtra,Hernandez,FEMENINO,12-01-1998}
+{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {LaOtra,Hernandez,FEMENINO,31-02-1998}
 
 {Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {Prueba,Hernandez,FEMENINO,12-01-1998}
-amigos 0,1
+
+{Jesus,Medina,MASCULINO,10-07-1997} eliminar 2
+
+{Scarlet,Hernandez,FEMENINO,12-01-1998} conexion {Prueba,Hernandez,FEMENINO,12-01-1998}
+
+amigos {Jesus,Medina,MASCULINO,10-07-1997},3
+
+ignorar esto

@@ -23,47 +23,52 @@ public class Amigos {
 
     public static void main(String[] args) {
         leerArchivo();
-        System.out.println("-----------------------");
-        //System.out.println(catalogo);
-        System.out.println("-----------------------");
+        System.out.println("-------------------Catalogo------------------");
+        System.out.println(catalogo);
+        System.out.println("--------------------Red----------------------");
         System.out.println(red);
-        System.out.println("-----------------------");
+        System.out.println("---------------------------------------------");
 
     }
     public static void leerArchivo() {
-        String ignoradas = "";
-        String nombre = "", apellido = "";
-        Genero sexo;
-        Calendar fecNac;
+        StringBuilder ignoradas = new StringBuilder();
 
         try {
             File archivoEntrada = new File(rutaArchivoEntrada);
             Scanner scIn = new Scanner(archivoEntrada);
-            String linea = "";
+            String linea;
 
             while (scIn.hasNextLine()) {
                 linea = scIn.nextLine();
 
                 if (linea.matches(formatoregistro)) {
-                    insertarPersonaCatalogo(crearPersona(linea,true));
+
+                    if (linea.matches(patternPersona)){
+                        if (validarFecha(linea))
+                            insertarPersonaCatalogo(crearPersona(linea,true));
+                        else
+                            ignoradas.append(linea+"\n");
+                    }
+                    else
+                        insertarPersonaCatalogo(crearPersona(linea,true));
+
                 }
                 else
                     if (linea.matches(formatoAmistad)) {
-                        //System.out.println("formato amistad");
                         String persona1 = linea.split(" amigo ")[0];
                         String persona2 = linea.split(" amigo ")[1];
+                        Persona p1;
+                        Persona p2;
 
-                        Persona p1 = obtenerPersona(persona1,true);
-                        Persona p2 = obtenerPersona(persona2,true);
+                        if (validarFecha(persona1) && validarFecha(persona2)){
 
-                        if (p1 == null && p2 != null)
-                            System.out.println(persona1 +" no estan en el catalogo");
-                        else if(p1 != null && p2 == null)
-                            System.out.println(persona2 +" no estan en el catalogo");
-                        else if (p1 == null && p2 == null)
-                            System.out.println(persona1 +" y "+ persona2 +" no estan en el catalogo");
-                        else if (p1 != null && p2 != null && p1 != p2)
+                            p1 = obtenerPersona(persona1,true);
+                            p2 = obtenerPersona(persona2,true);
+
                             insertarPersonaRed(p1,p2);
+                        }
+                        else
+                            ignoradas.append(linea+"\n");
 
                     }
                     else
@@ -75,12 +80,11 @@ public class Amigos {
                             Persona p2 = obtenerPersona(persona2,false);
 
                             if(p1 != null && p2 != null){
-                                if (red.get(p1) != null && red.get(p1).contains(p2))
-                                    red.get(p1).remove(red.get(p1).indexOf(p2));
-
-                                if (red.get(p2) != null && red.get(p2).contains(p1))
-                                    red.get(p2).remove(red.get(p2).indexOf(p1));
+                                red.get(p1).remove(p2);
+                                red.get(p2).remove(p1);
                             }
+                            else
+                                ignoradas.append(linea+"\n");
 
 
                         }
@@ -91,12 +95,8 @@ public class Amigos {
 
                                 Persona p1 = obtenerPersona(persona1,false);
                                 Persona p2 = obtenerPersona(persona2,false);
-                                if (p1 == null && p2 != null)
-                                    System.out.println(persona1 +" no esta en el catalogo");
-                                else if(p1 != null && p2 == null)
-                                    System.out.println(persona2 +" no esta en el catalogo");
-                                else if (p1 == null && p2 == null)
-                                    System.out.println(persona1 +" y "+ persona2 +" no estan en el catalogo");
+                                if (p1 == null || p2 == null)
+                                    ignoradas.append(linea+"\n");
                                 else if (sonAmigos(p1,p2))
                                     System.out.println(p1.getNombre() +" y "+ p2.getNombre() +" son amigos");
                                 else
@@ -104,16 +104,28 @@ public class Amigos {
                             }
                             else
                                 if (linea.matches(formatoListaAmigos)) {
-                                    String persona1 = linea.split("amigos ")[1].replaceAll("(,[0-9]+)","");
+                                    int inicio = linea.indexOf("{");
+                                    int fin = linea.indexOf("}");
+                                    String persona1 = linea.substring(inicio,fin+1);
                                     Persona p1 = obtenerPersona(persona1,false);
-                                    System.out.println("aqui");
-                                    System.out.println(listarAmigosNivel(p1,4));
-                                    System.out.println("es");
+
+                                    int niv = Integer.parseInt(linea.split(patternPersona+",")[1]);
+
+                                    if (p1 == null)
+                                        System.out.println(persona1 +" no esta en el catalogo");
+                                    else{
+                                        System.out.println("\n");
+                                        System.out.println("-----------------Amigos nivel "+niv+"------------------------");
+                                        System.out.println(listarAmigosNivel(p1,niv));
+                                        System.out.println("-----------------Amigos nivel "+niv+"------------------------");
+                                        System.out.println("\n");
+                                    }
+
 
                                 }
                                 else{
                                     if (linea.length() != 0 )
-                                        ignoradas += linea+"\n";
+                                        ignoradas.append(linea).append("\n");
                                 }
 
             }
@@ -124,7 +136,7 @@ public class Amigos {
 
         //escribir las lineas ignoradas
         try (FileWriter fw = new FileWriter(rutaArchivoSalida)){
-            fw.write(ignoradas);
+            fw.write(ignoradas.toString());
             fw.flush();
 
         }catch (IOException e){
@@ -145,12 +157,12 @@ public class Amigos {
         if (red.get(p1) != null)
             red.get(p1).add(p2);
         else
-            red.put(p1,new ArrayList<>(Arrays.asList(p2)));
+            red.put(p1,new ArrayList<>(Collections.singletonList(p2)));
 
         if (red.get(p2) != null)
             red.get(p2).add(p1);
         else
-            red.put(p2,new ArrayList<>(Arrays.asList(p1)));
+            red.put(p2,new ArrayList<>(Collections.singletonList(p1)));
 
 
     }
@@ -185,27 +197,26 @@ public class Amigos {
             p = crearPersona(persona,crear);
             if (crear)
                 insertarPersonaCatalogo(p);
-        }else
-            if(Integer.parseInt(persona) >= 0 && catalogo.size() > Integer.parseInt(persona) ){
+
+        }else if(Integer.parseInt(persona) >= 0 && catalogo.size() > Integer.parseInt(persona) ){
                 p = catalogo.get(Integer.parseInt(persona));
             }
 
         return p;
     }
 
-    public static String incluirFecha(String linea){
+    public static boolean validarFecha(String linea){
         Pattern patternFecha = Pattern.compile("\\d{2}-\\d{2}-\\d{4}", Pattern.CASE_INSENSITIVE);
         //validar que la fecha sea valida
-        String fecha = "01-01-1900";
+        String fecha="01-01-1900";
         Matcher matcher = patternFecha.matcher(linea);
         if (matcher.find())
             fecha = matcher.group();
-        if (!validarFecha(fecha))
-            return linea+"\n";
-        return "";
+
+        return existeFecha(fecha);
     }
 
-    public static boolean validarFecha(String fecha) {
+    public static boolean existeFecha(String fecha){
         fecha = fecha.replaceAll("-","/");
         try {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -218,8 +229,8 @@ public class Amigos {
     }
 
     public static HashSet<Persona> listarAmigosNivel(Persona persona, int nivel){
-        ArrayList<Persona> visitados = new ArrayList<>(Arrays.asList(persona));
-        return  listarAmigosNivel(persona,nivel,0,new HashSet<>(), visitados);
+
+        return  listarAmigosNivel(persona,nivel,0,new HashSet<>(), new ArrayList<>());
     }
 
     public static HashSet<Persona> listarAmigosNivel(Persona persona, int nivel, int nivelActual, HashSet<Persona> listaAmigos, ArrayList<Persona> nodosVisitados){

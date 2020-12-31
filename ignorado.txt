@@ -1,0 +1,2 @@
+{Scarlet,Hernandez,FEMENINO,12-01-1998} amigo {LaOtra,Hernandez,FEMENINO,31-02-1998}
+ignorar esto
